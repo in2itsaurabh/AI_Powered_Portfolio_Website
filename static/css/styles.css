@@ -1,0 +1,345 @@
+/* Universal Styles */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+  
+  body {
+    font-family: 'Roboto', sans-serif;
+    background-color: #f5f7fa;
+    color: #333;
+    font-size: 16px;
+    line-height: 1.6;
+  }
+  
+  /* Header Section */
+  header {
+    background: linear-gradient(135deg, #007bff, #0056b3);
+    color: white;
+    padding: 3rem 1rem;
+    text-align: center;
+  }
+  
+  header h1 {
+    font-size: 2.8rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  header p {
+    font-size: 1.2rem;
+    opacity: 0.9;
+  }
+  
+  /* Profile Image */
+  .profile-image {
+    margin-top: 1.5rem;
+    width: 160px;
+    height: 160px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid #ffffffaa;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  }
+  
+  /* Navigation */
+  header nav {
+    margin-top: 1.5rem;
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    flex-wrap: wrap;
+  }
+  
+  header nav a {
+    color: white;
+    font-weight: bold;
+    text-decoration: none;
+    font-size: 1rem;
+    padding: 0.5rem 1rem;
+    border: 2px solid white;
+    border-radius: 30px;
+    transition: background 0.3s, color 0.3s;
+  }
+  
+  header nav a:hover {
+    background-color: white;
+    color: #007bff;
+  }
+  
+  /* Section and Cards */
+  .section {
+    max-width: 1100px;
+    margin: 3rem auto;
+    padding: 0 1.5rem;
+  }
+  
+  .section h2 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    border-left: 5px solid #007bff;
+    padding-left: 0.75rem;
+    color: #0056b3;
+  }
+  
+  .card {
+    background: white;
+    border-radius: 10px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  
+  .card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+  }
+  
+  .card h3 {
+    margin-top: 0;
+    color: #007bff;
+  }
+
+  /* services css */
+  .card-container {
+    display: flex;
+    justify-content: space-between;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+  }
+  
+  .card-container .card {
+    flex: 1 1 30%;
+  }
+  
+  /* Footer */
+  footer {
+    background-color: #212529;
+    color: white;
+    padding: 2rem 1rem;
+    text-align: center;
+    margin-top: 4rem;
+  }
+  
+  /* Chatbot Styles */
+  .chatbot-button {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: #007bff;
+    color: white;
+    padding: 16px;
+    font-size: 20px;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    z-index: 999;
+    transition: transform 0.3s ease;
+  }
+  
+  .chatbot-button:hover {
+    transform: scale(1.1);
+  }
+  
+  .chatbox {
+    position: fixed;
+    bottom: 90px;
+    right: 20px;
+    width: 350px;
+    height: 500px;
+    background-color: #ffffff;
+    border-radius: 20px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+    display: none;
+    flex-direction: column;
+    padding: 0;
+    z-index: 1000;
+    overflow: hidden;
+    font-family: 'Roboto', sans-serif;
+  }
+  
+  .chat-header {
+    font-size: 1.4rem;
+    font-weight: bold;
+    text-align: center;
+    padding: 10px;
+    color: #fff;
+    background: #007bff;
+    border-radius: 20px 20px 0 0;
+  }
+  
+  .chatbox-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 10px;
+    background: #f9f9f9;
+  }
+  
+  .chat-input-container {
+    display: flex;
+    padding: 10px;
+    background-color: #f1f1f1;
+    border-radius: 0 0 20px 20px;
+  }
+  
+  .chat-input-container input[type="text"] {
+    flex: 1;
+    padding: 10px;
+    border: none;
+    border-radius: 20px;
+    font-size: 14px;
+    outline: none;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .chat-input-container button {
+    margin-left: 10px;
+    padding: 10px 16px;
+    border: none;
+    background-color: #007bff;
+    color: #fff;
+    border-radius: 20px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .chat-input-container button:hover {
+    background-color: #0056b3;
+  }
+  
+  .message {
+    display: flex;
+    margin-bottom: 10px;
+  }
+  
+  .user-message {
+    margin-left: auto;
+    background: #007bff;
+    color: white;
+    border-radius: 20px 20px 0 20px;
+    padding: 8px 12px;
+    max-width: 70%;
+  }
+  
+  .bot-message {
+    margin-right: auto;
+    background: #e0f7fa;
+    color: #333;
+    border-radius: 20px 20px 20px 0;
+    padding: 8px 12px;
+    max-width: 70%;
+  }
+  
+  /* Emoji Styles */
+  .emojis {
+    display: flex;
+    justify-content: center;
+    padding: 5px;
+  }
+  
+  .emoji {
+    font-size: 1.2rem;
+    margin: 0 5px;
+    cursor: pointer;
+    transition: transform 0.2s;
+  }
+  
+  .emoji:hover {
+    transform: scale(1.3);
+  }
+  
+  /* Scrollbar Styling for Chatbox */
+  .chatbox-content::-webkit-scrollbar {
+    width: 6px;
+  }
+  
+  .chatbox-content::-webkit-scrollbar-thumb {
+    background-color: #007bff;
+    border-radius: 10px;
+  }
+   
+ /* contact css */
+ form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+form input,
+form textarea,
+form select {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 16px;
+  font-family: 'Roboto', sans-serif;
+  background-color: #f9f9f9;
+}
+
+form input:focus,
+form textarea:focus,
+form select:focus {
+  border-color: #007bff;
+  outline: none;
+  background-color: #fff;
+}
+
+button[type="submit"] {
+  padding: 10px 18px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button[type="submit"]:hover {
+  background-color: #0056b3;
+}
+
+
+  
+  /* Mobile Responsive */
+  @media (max-width: 768px) {
+    .chatbox {
+      width: 90%;
+      right: 5%;
+    }
+  
+    .chatbot-button {
+      bottom: 30px;
+      right: 30px;
+    }
+  
+    header h1 {
+      font-size: 2rem;
+    }
+  
+    .section {
+      padding: 1rem;
+    }
+  
+    .card {
+      padding: 1rem;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .profile-image {
+      width: 100px;
+      height: 100px;
+    }
+  
+    .chatbox {
+      width: 90%;
+      right: 5%;
+      height: 450px;
+    }
+  }
+  
