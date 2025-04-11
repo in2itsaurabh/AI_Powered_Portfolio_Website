@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% block title %}CSV Preview - Portfolio{% endblock %}
+
+{% block content %}
+  <h2>CSV Data Preview</h2>
+  <div class="csv-preview">
+    <!-- The | safe filter prevents Django from escaping HTML -->
+    {{ data_html|safe }}
+  </div>
+  <a href="{% url 'services' %}">Back to Services</a>
+{% endblock %}

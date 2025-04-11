@@ -13,3 +13,4 @@ langchain-google-genai
 langchain_core
 openai
 python-dotenv
+pandas

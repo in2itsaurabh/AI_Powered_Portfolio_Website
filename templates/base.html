@@ -19,6 +19,8 @@
       <a href="{% url 'services' %}">Services</a> 
       <a href="{% url 'contact' %}">Contact</a>
     </nav>
+    <button id="modeToggle" class="mode-toggle">🌙</button>
+
     <div class="floating-cubes">
       <span class="cube">AI</span>
       <span class="cube">ML</span>
@@ -45,6 +47,7 @@
 
 </body>
 <script>
+
   const cubes = document.querySelectorAll('.cube');
   cubes.forEach(cube => {
     const left = Math.random() * 100;
@@ -54,6 +57,22 @@
     cube.style.left = `${left}%`;
     cube.style.animationDelay = `${delay}s`;
     cube.style.fontSize = `${size}rem`;
+  });
+
+  {% comment %} dark body {% endcomment %}
+  const toggleButton = document.getElementById('modeToggle');
+  const currentTheme = localStorage.getItem('theme');
+
+  if (currentTheme === 'dark') {
+    document.body.classList.add('dark-mode');
+    toggleButton.textContent = '☀️';
+  }
+
+  toggleButton.addEventListener('click', () => {
+    document.body.classList.toggle('dark-mode');
+    const theme = document.body.classList.contains('dark-mode') ? 'dark' : 'light';
+    localStorage.setItem('theme', theme);
+    toggleButton.textContent = theme === 'dark' ? '☀️' : '🌙';
   });
 </script>
 </html>

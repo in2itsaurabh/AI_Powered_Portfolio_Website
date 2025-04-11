@@ -1,4 +1,5 @@
-from django.shortcuts import render
+from django.shortcuts import render,HttpResponseRedirect,redirect
+from django.urls import reverse
 from .forms import ContactForm
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST
@@ -8,9 +9,10 @@ from langchain.memory import ConversationBufferWindowMemory
 from langchain.agents import initialize_agent
 from.prompts import fixed_prompt
 from .tools import get_calculator_tool,get_SQLquery_tool,get_Translation_tool,get_Grok_tool,get_Summarize_tool
-
-
-
+from django.shortcuts import render
+from django.core.files.storage import FileSystemStorage
+import pandas as pd
+import os
 
 
 @require_POST
@@ -58,19 +60,54 @@ def chatbot_response(request):
         return JsonResponse({'output': answer})
     
 
-
-
-
-# from .llm_models import llm_gemini,llm_open_ai
-# from .forms import All_Chat_Form
-# from.prompts import fixed_prompt
-# from .tools import get_calculator_tool,get_SQLquery_tool,get_Translation_tool,get_Grok_tool,get_Summarize_tool
-                   
+          
 def home(request):
     return render(request, 'index.html')  # directly referring to 'index.html'
 
 def services(request):
     return render(request, 'services.html')
+
+def upload_csv(request):
+    if request.method == 'POST':
+        csv_file = request.FILES.get('csv_file')
+        if csv_file:
+            # Read CSV file with pandas
+            try:
+                df = pd.read_csv(csv_file)
+            except Exception as e:
+                # Handle error if the CSV is not valid
+                return render(request, 'services.html', {'error': f"Error reading CSV: {str(e)}"})
+
+            # Convert dataframe to HTML table string
+            df=df.head(10)
+            data_html = df.to_html(classes='table table-striped', index=False)
+
+            # Render a preview page to display the data
+            return render(request, 'preview.html', {'data_html': data_html})
+    # If GET or no CSV uploaded, return the services page
+    return render(request, 'services.html')
+
+
+# def process_forecast(request):
+#     if request.method == "POST":
+#         features = request.POST.getlist('features')
+#         target = request.POST['target']
+#         frequency = request.POST['frequency']
+#         forecast_length = int(request.POST['forecast_length'])
+        
+#         # Your logic to run forecast goes here
+#         return HttpResponseRedirect(request, {
+#             'features': features,
+#             'target': target,
+#             'frequency': frequency,
+#             'forecast_length': forecast_length
+#         })
+
+#     return redirect('services')
+
+
+
+
 
 def contact(request):
     if request.method == 'POST':
