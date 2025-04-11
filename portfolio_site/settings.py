@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-opap#7wi00d03o*(5d=y_73=jim11z#vh#-l!^)_=!gkew5liq
 DEBUG = True
 
 ALLOWED_HOSTS = []
-
+APPEND_SLASH=False
 
 # Application definition
 

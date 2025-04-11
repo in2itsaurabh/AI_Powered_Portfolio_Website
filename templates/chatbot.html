@@ -18,57 +18,73 @@
     <span class="emoji" onclick="addEmoji('🤔')">🤔</span>
     <span class="emoji" onclick="addEmoji('👍')">👍</span>
   </div>
+  
   <script>
+    function getCookie(name) {
+      let cookieValue = null;
+      if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let cookie of cookies) {
+          cookie = cookie.trim();
+          if (cookie.startsWith(name + '=')) {
+            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+            break;
+          }
+        }
+      }
+      return cookieValue;
+    } 
+  
+    const csrftoken = getCookie('csrftoken');
+  
     function toggleChatbox() {
       const chatbox = document.getElementById('chatbox');
+      const button = document.querySelector('.chatbot-button');
       chatbox.style.display = chatbox.style.display === 'flex' ? 'none' : 'flex';
+      
+      // Remove animation after first click
+      button.style.animation = 'none';
     }
-
+  
     function sendMessage() {
       const input = document.getElementById("userInput");
       const messages = document.getElementById("chatMessages");
       const userText = input.value.trim();
-
       if (userText === "") return;
-
+  
       messages.innerHTML += `<div class="message"><div class="user-message">${userText}</div></div>`;
       input.value = "";
       messages.scrollTop = messages.scrollHeight;
-
-      const lowerText = userText.toLowerCase();
-      if (["hi", "hello", "hey"].includes(lowerText)) {
-        setTimeout(() => {
-          messages.innerHTML += `<div class="message"><div class="bot-message">Hi there! 👋</div></div>`;
-          messages.scrollTop = messages.scrollHeight;
-        }, 500);
-        return;
-      }
-
-      // Update the fetch URL as needed for your backend chatbot handler.
-      fetch('/ask', {
+  
+      fetch('/ask/', {
         method: 'POST',
-        body: new URLSearchParams('query=' + userText),
         headers: {
-          'Content-Type': 'application/x-www-form-urlencoded'
-        }
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'X-CSRFToken': csrftoken
+        },
+        body: new URLSearchParams({ query: userText })
       })
       .then(response => response.json())
       .then(data => {
         messages.innerHTML += `<div class="message"><div class="bot-message">${data.output}</div></div>`;
         messages.scrollTop = messages.scrollHeight;
+      })
+      .catch(error => {
+        messages.innerHTML += `<div class="message error">Something went wrong. Please try again.</div>`;
       });
     }
-
+  
     document.getElementById("userInput").addEventListener("keydown", function (event) {
       if (event.key === "Enter") {
         event.preventDefault();
         sendMessage();
       }
     });
-
+  
     function addEmoji(emoji) {
       const input = document.getElementById("userInput");
       input.value += emoji;
       input.focus();
     }
   </script>
+  

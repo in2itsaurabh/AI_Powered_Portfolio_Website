@@ -7,18 +7,41 @@
   
   body {
     font-family: 'Roboto', sans-serif;
-    background-color: #f5f7fa;
-    color: #333;
+    background: linear-gradient(to right, #f5f7fa, #e4ecf4);
+    color: #2c3e50;
     font-size: 16px;
-    line-height: 1.6;
+    line-height: 1.7;
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    overflow-x: hidden;
+    transition: background 0.5s ease-in-out;
   }
   
+  
   /* Header Section */
+
+
   header {
-    background: linear-gradient(135deg, #007bff, #0056b3);
+    background: linear-gradient(-45deg, #0affc2, #2575fc, #ff3f3f, #25f5fc);
+    background-size: 400% 400%;
+    animation: gradientBG 10s ease infinite;
     color: white;
-    padding: 3rem 1rem;
     text-align: center;
+    padding: 40px 20px;
+    border-bottom: 3px solid #fff;
+  }
+  
+  @keyframes gradientBG {
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
   }
   
   header h1 {
@@ -52,21 +75,68 @@
   }
   
   header nav a {
-    color: white;
-    font-weight: bold;
+    margin: 0 15px;
+    color: #fff;
     text-decoration: none;
-    font-size: 1rem;
-    padding: 0.5rem 1rem;
-    border: 2px solid white;
-    border-radius: 30px;
-    transition: background 0.3s, color 0.3s;
+    font-weight: bold;
+    transition: color 0.3s ease;
   }
   
   header nav a:hover {
-    background-color: white;
-    color: #007bff;
+    color: #ffd700;
   }
   
+  .profile-image {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid #fff;
+    margin-bottom: 10px;
+  }
+  
+
+  .floating-cubes {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 1;
+  }
+  
+  .cube {
+    position: absolute;
+    top: -50px;
+    font-weight: bold;
+    color: #fff;
+    font-size: 1rem;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid #ffffff55;
+    padding: 6px 12px;
+    border-radius: 6px;
+    transform: rotate(45deg);
+    animation: fall 8s linear infinite;
+    z-index: 1;
+  }
+  
+  @keyframes fall {
+    0% {
+      transform: translateY(-60px) rotate(45deg);
+      opacity: 1;
+    }
+    100% {
+      transform: translateY(400px) rotate(360deg);
+      opacity: 0;
+    }
+  }
+  
+
+
+
+
   /* Section and Cards */
   .section {
     max-width: 1100px;
@@ -128,20 +198,30 @@
     bottom: 20px;
     right: 20px;
     background-color: #007bff;
-    color: white;
-    padding: 16px;
-    font-size: 20px;
-    border: none;
+    color: #fff;
+    font-size: 24px;
+    padding: 12px 16px;
     border-radius: 50%;
     cursor: pointer;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    animation: popForever 1.5s ease-in-out infinite;
     z-index: 999;
-    transition: transform 0.3s ease;
+    transition: transform 0.3s;
   }
   
   .chatbot-button:hover {
     transform: scale(1.1);
   }
+  
+  @keyframes popForever {
+    0%, 100% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.2);
+    }
+  }
+  
   
   .chatbox {
     position: fixed;
@@ -302,6 +382,12 @@ button[type="submit"] {
 button[type="submit"]:hover {
   background-color: #0056b3;
 }
+.typing {
+  font-style: italic;
+  color: #888;
+  padding: 5px 10px;
+}
+
 
 
   

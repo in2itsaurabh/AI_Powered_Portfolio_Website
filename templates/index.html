@@ -3,20 +3,71 @@
 {% block content %}
   <h2>About Me</h2>
   <div class="card">
-    <p>I'm a data scientist with a passion for building intelligent systems. I specialize in machine learning, deep learning, and end-to-end data pipeline development.</p>
-  </div>
+    <p><strong>Hi, I'm a Data Scientist & ML Engineer</strong> with a passion for building intelligent systems that solve real-world problems. I specialize in Chatbot Development, LLM, machine Learning, Deep Learning and modern tech stacks.</p>
+
+  <p>I love transforming complex data into smart, scalable tools that make life easier for users and teams alike.</p>
+
+  <h3>Skills</h3>
+  <ul>
+    <li><strong>Languages:</strong> Python</li>
+    <li><strong>ML & AI:</strong> Machine Learning, Deep Learning, Tensorflow, Keras, Scikit-learn, AutoTS, Feature Engineering</li>
+    <li><strong>LLMs & GenAI:</strong> OpenAI, Gemini, Prompt Engineering</li>
+    <li><strong>Data & Tools:</strong> Pandas, NumPy, Kafka</li>
+    <li><strong>Framework:</strong> Django</li>
+    <li><strong>Platforms:</strong> Microsoft Teams</li>
+  </ul>  
+</div>
 
   <h2>Projects</h2>
+  {% comment %} <div class="card">
+    <h3>Utility For Forecasting with autots</h3>
+    <p>Created a flexible forecasting tool using AutoTS that allows users to upload any time series dataset, select their desired features and target variable, and generate accurate forecasts based on their chosen frequency (daily, weekly, monthly, etc.). Ideal for sales, stock, health, or any other time-based data.</p>
+  </div> {% endcomment %}
+
   <div class="card">
-    <h3>Sales Forecasting with XGBoost</h3>
-    <p>Developed a robust forecasting pipeline using XGBoost to predict daily, weekly, and monthly sales for multiple product categories.</p>
+    <h3>Chatbot Integration on Teams for ITSM Project</h3>
+    <p>Engineered and deployed an intelligent LLM-powered chatbot on Microsoft Teams to transform ITSM operations. This virtual assistant automated ticket creation, delivered real-time status updates, and integrated with backend systems like ServiceNow and Jira. Built using OpenAI and Gemini LLMs with refined prompt engineering, the chatbot significantly boosted support efficiency and user satisfaction.</p>
+    <p><strong>Tools Used:</strong></p>
+    <ul>
+      <li><strong>Platforms:</strong> Microsoft Teams, Azure Bot Framework</li>
+      {% comment %} <li><strong>Integration:</strong>ServiceNow API</li> {% endcomment %}
+      <li><strong>LLM & GenAI:</strong>  Prompt Engineering, OpenAI, Gemini</li>
+      <li><strong>Languages:</strong> Python, JavaScript (for bot logic)</li>
+    </ul>
   </div>
+  
   <div class="card">
-    <h3>AutoML for Healthcare Data</h3>
-    <p>Created an AutoML pipeline for predicting patient outcomes using ensemble models and feature engineering techniques.</p>
+    <h3>Utility For Forecasting with AutoTS</h3>
+    <p>Developed a flexible forecasting utility that enables users to upload any time series dataset, select their desired features and target variable, and generate accurate forecasts based on selected frequencies like daily, weekly, or monthly. This tool supports a wide range of applications including sales, inventory, finance, and more.</p>
+    <p><strong>Tools Used:</strong></p>
+    <ul>
+      <li><strong>Libraries:</strong> AutoTS, Pandas, NumPy</li>
+      <li><strong>ML & Forecasting:</strong> Time Series Models, Feature Engineering</li>
+      <li><strong>Languages:</strong> Python</li>
+    </ul>
   </div>
+  
   <div class="card">
-    <h3>Dynamic Forecasting System</h3>
-    <p>Built a flexible forecasting framework using AutoTS to support multiple use cases including sales, stock trends, and health metrics.</p>
+    <h3>Chatbot Deployment Across Multiple Company Products</h3>
+    <p>Led the integration of an intelligent chatbot across a suite of company products to enhance user engagement, streamline support, and automate repetitive tasks. The chatbot delivers consistent experiences across platforms, handles FAQs, gathers feedback, and escalates complex queries when needed—scaling support without scaling cost.</p>
+    <p><strong>Tools Used:</strong></p>
+    <ul>
+      {% comment %} <li><strong>Platforms:</strong> Web Applications, Mobile Apps, Product Dashboards</li> {% endcomment %}
+      <li><strong>LLM & GenAI:</strong>  Prompt Engineering, OpenAI, Gemini</li>
+      <li><strong>Languages:</strong> Python</li>
+    </ul>
   </div>
+  
+  <div class="card">
+    <h3>Grok Pattern Generator using Machine Learning</h3>
+    <p>Developed a machine learning-powered system to automatically generate Grok patterns for unstructured log data. The solution consumes real-time logs via Kafka, processes and vectorizes the log content, and uses a trained RandomForest model to predict the appropriate Grok pattern—dramatically reducing manual parsing efforts in log analytics pipelines.</p>
+    <p><strong>Tools Used:</strong></p> 
+    <ul>
+      <li><strong>Data Streaming:</strong> Apache Kafka</li>
+      <li><strong>Machine Learning:</strong> RandomForest Classifier, Scikit-learn, Regex Parsing</li>
+      <li><strong>Languages:</strong> Python</li>
+      {% comment %} <li><strong>Application:</strong> Log Analysis, Observability Automation</li> {% endcomment %}
+    </ul>
+  </div>
+  
 {% endblock %}

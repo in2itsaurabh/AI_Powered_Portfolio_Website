@@ -1,0 +1,59 @@
+/djangoenv
+.env
+
+# Ignore compiled Python files
+__pycache__
+*.pyc
+*.pyd
+*.pyo
+
+# this the ignore pickle file for model and vector 
+*.pkl
+
+# this the ignore the api json file
+apidocfile/
+
+# ignore the json file to ignore the chat history for sql
+chat_history.json
+
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+ 
+ 
+ 
+# Environment variables
+.env
+.venv/
+.myenv
+myenv/
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+newenv/
+ 
+# Flask/Django stuff:
+*.log
+local_settings.py
+db.sqlite3
+db.sqlite3-journal
+ 
+# Logs and databases
+*.log
+*.sqlite3
+*.db

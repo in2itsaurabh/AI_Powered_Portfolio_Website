@@ -13,12 +13,24 @@
   <header>
     <img src="{% static 'img/ChatGPT Image Apr 10, 2025, 03_20_41 PM.png' %}" alt="Profile" class="profile-image">
     <h1>Saurabh Tiwari</h1>
-    <p>Data Scientist | AI/ML Developer | Python Enthusiast</p>
+    <p>| AI/ML Developer |</p>
     <nav>
       <a href="{% url 'home' %}">Home</a> 
       <a href="{% url 'services' %}">Services</a> 
       <a href="{% url 'contact' %}">Contact</a>
     </nav>
+    <div class="floating-cubes">
+      <span class="cube">AI</span>
+      <span class="cube">ML</span>
+      <span class="cube">LLM</span>
+      <span class="cube">DL</span>
+      <span class="cube">NLP</span>
+      <span class="cube">Vision</span>
+      <span class="cube">Python</span>
+      <span class="cube">Data</span>
+      <span class="cube">Cloud</span>
+      <span class="cube">GPT</span>
+    </div>
   </header>
 
   <div class="section">
@@ -30,5 +42,18 @@
   </footer>
 
   {% include "chatbot.html" %}
+
 </body>
+<script>
+  const cubes = document.querySelectorAll('.cube');
+  cubes.forEach(cube => {
+    const left = Math.random() * 100;
+    const delay = Math.random() * 5;
+    const size = Math.random() * (1.5 - 0.8) + 0.8;
+
+    cube.style.left = `${left}%`;
+    cube.style.animationDelay = `${delay}s`;
+    cube.style.fontSize = `${size}rem`;
+  });
+</script>
 </html>
