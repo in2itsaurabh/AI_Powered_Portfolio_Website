@@ -22,13 +22,7 @@ def autots_model_automate(df,date_column,target,join_col_name,forecast_length,fr
             verbose=False  # Helps track what's happening if it crashes again
  
             )
-    # model = model.fit(df, date_col=date_column, value_col=target,id_col=join_col_name)
-    # forecast = model.predict().forecast
-    # best_scores = model.score_breakdown[model.score_breakdown.index == model.best_model_id]
-    # SMAPE_Score=best_scores.mean().get('smape')
-    # mape_Score=(SMAPE_Score / 2) * (1 + (SMAPE_Score / 100))
- 
-    # return forecast,mape_Score
+
     try:
         model = model.fit(df, date_col=date_column, value_col=target, id_col=join_col_name)
         forecast = model.predict().forecast
