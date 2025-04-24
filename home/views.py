@@ -102,7 +102,7 @@ def upload_csv(request):
 
 from django.http import JsonResponse
 import pandas as pd
-
+from django.conf import settings  
 # def run_forecast(request):
 #     if request.method == 'POST':
 #         # Get form data from the POST request
@@ -140,22 +140,24 @@ def test_forecast_submission(request):
             frequency = request.POST.get('time_frame')
             periods = int(request.POST.get('periods'))
 
-            # Get file path from session
+            # get uploaded CSV path
             file_path = request.session.get('uploaded_csv_path')
             if not file_path or not os.path.exists(file_path):
                 return JsonResponse({'error': 'CSV file not found in session.'})
 
             df = pd.read_csv(file_path)
-            preview_data = df.head().to_dict(orient='records')
 
-            response,mape_score = autots_run_pipeline(df, features, target, periods, frequency)
+            # run forecast
+            response, mape_score = autots_run_pipeline(df, features, target, periods, frequency)
 
-            # Save the forecast result as CSV
-            # output_filename = 'forecasted_data.csv'
-            output_file_name=f"forecasted_{file_path.split('media/uploads/')[1]}"
+            # save forecast CSV
+            output_file_name = f"forecasted_{os.path.basename(file_path)}"
             output_path = os.path.join('media/forecasted/', output_file_name)
-            os.makedirs(os.path.dirname(output_path), exist_ok=True)  # Ensure directory exists
+            os.makedirs(os.path.dirname(output_path), exist_ok=True)
             response.to_csv(output_path, index=False)
+
+            # build the HTML for preview
+            data_html = response.to_html(classes='table table-striped', index=False)
 
             result = {
                 'feature': features,
@@ -163,13 +165,25 @@ def test_forecast_submission(request):
                 'frequency': frequency,
                 'periods': periods,
                 'mape': mape_score,
-                'data_preview_path': file_path,
+                'forecast_csv_path': output_path,
             }
 
-            return JsonResponse({'message': 'Hello World', 'data': result})
+            # return both your data dict and the HTML
+            
+            # Only extract the relative part under MEDIA_ROOT:
+            relative_path = output_path.replace(str(settings.MEDIA_ROOT) + os.sep, '')
+
+            # Build the public URL
+            forecast_url = settings.MEDIA_URL + relative_path.replace(os.sep, '/')
+
+            return JsonResponse({
+                'message': 'Hello World',
+                'data': result,
+                'data_html': data_html,
+                'forecast_url': forecast_url  # <- new
+            })
         except Exception as e:
             return JsonResponse({'error': str(e)})
-
 
 def contact(request):
     if request.method == 'POST':

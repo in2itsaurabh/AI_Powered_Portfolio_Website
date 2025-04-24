@@ -2,40 +2,144 @@
 {% block title %}CSV Preview - Portfolio{% endblock %}
 
 {% block content %}
+  <style>
+    /* Container and headings */
+    .csv-preview, #output-box {
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+    h2, h3 {
+      color: #0056b3;
+      margin-bottom: 12px;
+    }
+
+    /* Table styling */
+    .table-striped {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 0;
+    }
+    .table-striped th, .table-striped td {
+      padding: 8px 12px;
+      border: 1px solid #e0e0e0;
+    }
+    .table-striped th {
+      background: #007bff;
+      color: #fff;
+    }
+    .table-striped tr:nth-child(even) {
+      background: #f9f9f9;
+    }
+
+    /* Form layout */
+    #forecast-form {
+      background: #fdfdfd;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+    #forecast-form label {
+      font-weight: 600;
+      color: #333;
+    }
+    #forecast-form select,
+    #forecast-form input[type="number"] {
+      width: 100%;
+      padding: 8px 10px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      margin-top: 4px;
+      margin-bottom: 12px;
+      font-size: 14px;
+    }
+
+    /* Button */
+    button[type="submit"] {
+      background-color: #007bff;
+      color: #fff;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: background-color 0.2s;
+    }
+    button[type="submit"]:hover {
+      background-color: #0056b3;
+    }
+
+    /* Loading indicator */
+    #loading {
+      text-align: center;
+      color: #555;
+      font-style: italic;
+    }
+
+    /* Output box */
+    #output-box h3 {
+      margin-top: 0;
+    }
+    #output-box a {
+      color: #007bff;
+      text-decoration: none;
+      font-weight: 600;
+    }
+    #output-box a:hover {
+      text-decoration: underline;
+    }
+
+
+    .csv-preview, #output-box .csv-preview {
+      overflow-x: auto;
+      overflow-y: auto;
+      max-height: 400px;       /* adjust as you like */
+      border: 1px solid #e0e0e0;
+      padding: 8px;
+      border-radius: 6px;
+      background: #fafafa;
+    }
+    /* Ensure the table itself can grow wider */
+    .csv-preview table, #output-box .csv-preview table {
+      min-width: 800px;        /* or any width that forces scrolling */
+    }
+  </style>
+
   <h2>CSV Data Preview</h2>
   <div class="csv-preview">
     {{ data_html|safe }}
   </div>
-  <a href="{% url 'services' %}">Back to Services</a>
 
-  <!-- Dropdown Selection -->
+  <!-- Forecasting Form -->
   <form id="forecast-form" method="POST" action="#">
     {% csrf_token %}
-    <div style="display: flex; flex-wrap: wrap; gap: 20px; margin-bottom: 20px;">
-
+    <div style="display: flex; flex-wrap: wrap; gap: 20px;">
       <!-- Feature(s) Dropdown -->
-      <div>
-        <label for="dropdown1" title="Select the features from the dataset that will be used for forecasting. Include columns like datetime, and other which columns you want to forecast.">Select Feature(s):</label><br>
-        <select id="dropdown1" name="dropdown1[]" multiple required>
+      <div style="flex: 1 1 200px;">
+        <label for="dropdown1" title="Select the features from the dataset that will be used for forecasting. Include columns like datetime, and others.">Select Feature(s):</label>
+        <select id="dropdown1" name="dropdown1[]" multiple required size="5">
           {% for col in columns %}
-            <option value="{{ col }}">{{ col }}</option>
+          <option value="{{ col }}">{{ col }}</option>
           {% endfor %}
         </select>
       </div>
 
       <!-- Target Dropdown -->
-      <div>
-        <label for="dropdown2" title="Select the target column that you want to predict.">Select Target:</label><br>
+      <div style="flex: 1 1 200px;">
+        <label for="dropdown2" title="Select the target column that you want to predict.">Select Target:</label>
         <select id="dropdown2" name="dropdown2" required>
           {% for col in columns %}
-            <option value="{{ col }}">{{ col }}</option>
+          <option value="{{ col }}">{{ col }}</option>
           {% endfor %}
         </select>
       </div>
 
       <!-- Time Frame Dropdown -->
-      <div>
-        <label for="time_frame" title="Select the time frame for the forecast (e.g., daily, weekly).">Time Frame:</label><br>
+      <div style="flex: 1 1 150px;">
+        <label for="time_frame" title="Select the time frame for the forecast (e.g., daily, weekly).">Time Frame:</label>
         <select id="time_frame" name="time_frame" required>
           <option value="H">Hourly</option>
           <option value="D">Daily</option>
@@ -46,55 +150,63 @@
       </div>
 
       <!-- Forecast Period Input -->
-      <div>
-        <label for="periods" title="Specify the number of periods you want to forecast.">Forecast Period:</label><br>
+      <div style="flex: 1 1 120px;">
+        <label for="periods" title="Specify the number of periods you want to forecast.">Forecast Period:</label>
         <input type="number" id="periods" name="periods" min="1" step="1" required>
       </div>
     </div>
 
     <button type="submit">Submit</button>
   </form>
+
+  <!-- Loading Indicator -->
   <div id="loading" style="display: none;">
     <p>Processing... Please wait.</p>
   </div>
-<pre id="output-box" style="display:none;"><code id="output-json"></code></pre>
-  
-  <!-- Area to display output -->
-  <div id="output-box" style="margin-top: 30px; padding: 15px; border: 1px solid #ccc; display: none;">
-    <h3>Submitted Input:</h3>
-    <pre id="output-json" style="background: #f8f8f8; padding: 10px;"></pre>
+
+  <!-- Forecast Output -->
+  <div id="output-box" style="display: none;">
+    <!-- Filled in by JavaScript -->
   </div>
 
   <!-- JavaScript to show result below form -->
   <script>
     document.getElementById('forecast-form').addEventListener('submit', function(e) {
       e.preventDefault();
-  
-      const selectedFeatures = Array.from(document.getElementById('dropdown1').selectedOptions).map(opt => opt.value);
-      const selectedTarget = document.getElementById('dropdown2').value;
-      const selectedFrequency = document.getElementById('time_frame').value;
-      const selectedPeriods = document.getElementById('periods').value;
-  
+
+      // Collect inputs
+      const selectedFeatures = Array.from(document.getElementById('dropdown1').selectedOptions).map(o => o.value);
       const formData = new FormData();
-      selectedFeatures.forEach(feature => formData.append('dropdown1[]', feature));
-      formData.append('dropdown2', selectedTarget);
-      formData.append('time_frame', selectedFrequency);
-      formData.append('periods', selectedPeriods);
-  
+      selectedFeatures.forEach(f => formData.append('dropdown1[]', f));
+      formData.append('dropdown2', document.getElementById('dropdown2').value);
+      formData.append('time_frame', document.getElementById('time_frame').value);
+      formData.append('periods', document.getElementById('periods').value);
+
       // Show loading
       document.getElementById('loading').style.display = 'block';
-  
-      fetch('/test-submit/', {
-        method: 'POST',
-        body: formData
-      })
-      .then(response => response.json())
-      .then(data => {
-        document.getElementById('output-box').style.display = 'block';
-        document.getElementById('output-json').textContent = JSON.stringify(data, null, 2);
-        document.getElementById('loading').style.display = 'none';
-      });
+      const box = document.getElementById('output-box');
+      box.style.display = 'none';
+
+      fetch('/test-submit/', { method: 'POST', body: formData })
+        .then(r => r.json())
+        .then(payload => {
+          document.getElementById('loading').style.display = 'none';
+          box.style.display = 'block';
+
+          if (payload.error) {
+            box.innerHTML = `<p style="color:red;">Error: ${payload.error}</p>`;
+          } else {
+            box.innerHTML = `
+              <h3>Forecast Result (Top 10 Rows)</h3>
+              <div class="csv-preview">
+                ${payload.data_html}
+              </div>
+              <p><strong>MAPE:</strong> ${payload.data.mape}%</p>
+              <p><a href="${payload.forecast_url}" target="_blank">Download full CSV</a></p>
+              <p><a href="{% url 'services' %}">Back to Services</a></p>
+            `;
+          }
+        });
     });
   </script>
-  
 {% endblock %}
