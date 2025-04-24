@@ -57,3 +57,8 @@ db.sqlite3-journal
 *.log
 *.sqlite3
 *.db
+
+
+
+# file ignore
+media/

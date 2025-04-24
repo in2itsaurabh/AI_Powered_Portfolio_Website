@@ -8,4 +8,5 @@ urlpatterns = [
     # path('process_forecast/', views.process_forecast, name='process_forecast'),
     path('contact/', views.contact, name='contact'),
     path('ask/', views.chatbot_response, name='chatbot_response'),
+    path('test-submit/', views.test_forecast_submission, name='test_submit'),
 ] 

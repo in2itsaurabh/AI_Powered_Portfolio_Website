@@ -4,8 +4,97 @@
 {% block content %}
   <h2>CSV Data Preview</h2>
   <div class="csv-preview">
-    <!-- The | safe filter prevents Django from escaping HTML -->
     {{ data_html|safe }}
   </div>
   <a href="{% url 'services' %}">Back to Services</a>
+
+  <!-- Dropdown Selection -->
+  <form id="forecast-form" method="POST" action="#">
+    {% csrf_token %}
+    <div style="display: flex; flex-wrap: wrap; gap: 20px; margin-bottom: 20px;">
+
+      <!-- Feature(s) Dropdown -->
+      <div>
+        <label for="dropdown1" title="Select the features from the dataset that will be used for forecasting. Include columns like datetime, and other which columns you want to forecast.">Select Feature(s):</label><br>
+        <select id="dropdown1" name="dropdown1[]" multiple required>
+          {% for col in columns %}
+            <option value="{{ col }}">{{ col }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <!-- Target Dropdown -->
+      <div>
+        <label for="dropdown2" title="Select the target column that you want to predict.">Select Target:</label><br>
+        <select id="dropdown2" name="dropdown2" required>
+          {% for col in columns %}
+            <option value="{{ col }}">{{ col }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <!-- Time Frame Dropdown -->
+      <div>
+        <label for="time_frame" title="Select the time frame for the forecast (e.g., daily, weekly).">Time Frame:</label><br>
+        <select id="time_frame" name="time_frame" required>
+          <option value="H">Hourly</option>
+          <option value="D">Daily</option>
+          <option value="W">Weekly</option>
+          <option value="M">Monthly</option>
+          <option value="Y">Yearly</option>
+        </select>
+      </div>
+
+      <!-- Forecast Period Input -->
+      <div>
+        <label for="periods" title="Specify the number of periods you want to forecast.">Forecast Period:</label><br>
+        <input type="number" id="periods" name="periods" min="1" step="1" required>
+      </div>
+    </div>
+
+    <button type="submit">Submit</button>
+  </form>
+  <div id="loading" style="display: none;">
+    <p>Processing... Please wait.</p>
+  </div>
+<pre id="output-box" style="display:none;"><code id="output-json"></code></pre>
+  
+  <!-- Area to display output -->
+  <div id="output-box" style="margin-top: 30px; padding: 15px; border: 1px solid #ccc; display: none;">
+    <h3>Submitted Input:</h3>
+    <pre id="output-json" style="background: #f8f8f8; padding: 10px;"></pre>
+  </div>
+
+  <!-- JavaScript to show result below form -->
+  <script>
+    document.getElementById('forecast-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+  
+      const selectedFeatures = Array.from(document.getElementById('dropdown1').selectedOptions).map(opt => opt.value);
+      const selectedTarget = document.getElementById('dropdown2').value;
+      const selectedFrequency = document.getElementById('time_frame').value;
+      const selectedPeriods = document.getElementById('periods').value;
+  
+      const formData = new FormData();
+      selectedFeatures.forEach(feature => formData.append('dropdown1[]', feature));
+      formData.append('dropdown2', selectedTarget);
+      formData.append('time_frame', selectedFrequency);
+      formData.append('periods', selectedPeriods);
+  
+      // Show loading
+      document.getElementById('loading').style.display = 'block';
+  
+      fetch('/test-submit/', {
+        method: 'POST',
+        body: formData
+      })
+      .then(response => response.json())
+      .then(data => {
+        document.getElementById('output-box').style.display = 'block';
+        document.getElementById('output-json').textContent = JSON.stringify(data, null, 2);
+        document.getElementById('loading').style.display = 'none';
+      });
+    });
+  </script>
+  
 {% endblock %}

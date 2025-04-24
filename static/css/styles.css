@@ -469,7 +469,20 @@ button[type="submit"]:hover {
 }
 
 
+.multiselect-dropdown {
+  width: 200px;
+  padding: 5px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  background-color: white;
+  height: 35px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 
+.multiselect-dropdown:focus {
+  height: auto;
+}
 
 
 

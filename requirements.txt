@@ -14,3 +14,4 @@ langchain_core
 openai
 python-dotenv
 pandas
+autots

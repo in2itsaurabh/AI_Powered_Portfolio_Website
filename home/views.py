@@ -13,7 +13,7 @@ from django.shortcuts import render
 from django.core.files.storage import FileSystemStorage
 import pandas as pd
 import os
-
+from .forecasting_function import autots_run_pipeline
 
 @require_POST
 @csrf_protect
@@ -67,46 +67,108 @@ def home(request):
 def services(request):
     return render(request, 'services.html')
 
+
 def upload_csv(request):
     if request.method == 'POST':
         csv_file = request.FILES.get('csv_file')
         if csv_file:
-            # Read CSV file with pandas
             try:
-                df = pd.read_csv(csv_file)
+                # Save file to 'media/uploads/'
+                fs = FileSystemStorage(location='media/uploads/')
+                filename = fs.save(csv_file.name, csv_file)
+                file_path = os.path.join('media/uploads/', filename)
+
+                # Save the path to session
+                request.session['uploaded_csv_path'] = file_path
+
+                # Read and preview data
+                df = pd.read_csv(file_path)
+                data_html = df.head(10).to_html(classes='table table-striped', index=False)
+                columns = df.columns.tolist()
+
+                return render(request, 'preview.html', {
+                    'data_html': data_html,
+                    'columns': columns
+                })
+
             except Exception as e:
-                # Handle error if the CSV is not valid
                 return render(request, 'services.html', {'error': f"Error reading CSV: {str(e)}"})
 
-            # Convert dataframe to HTML table string
-            df=df.head(10)
-            data_html = df.to_html(classes='table table-striped', index=False)
-
-            # Render a preview page to display the data
-            return render(request, 'preview.html', {'data_html': data_html})
-    # If GET or no CSV uploaded, return the services page
     return render(request, 'services.html')
 
 
-# def process_forecast(request):
-#     if request.method == "POST":
-#         features = request.POST.getlist('features')
-#         target = request.POST['target']
-#         frequency = request.POST['frequency']
-#         forecast_length = int(request.POST['forecast_length'])
+
+
+
+from django.http import JsonResponse
+import pandas as pd
+
+# def run_forecast(request):
+#     if request.method == 'POST':
+#         # Get form data from the POST request
+#         features = request.POST.getlist('dropdown1[]')
+#         target = request.POST.get('dropdown2')
+#         frequency = request.POST.get('time_frame')
+#         periods = int(request.POST.get('periods'))
         
-#         # Your logic to run forecast goes here
-#         return HttpResponseRedirect(request, {
-#             'features': features,
-#             'target': target,
-#             'frequency': frequency,
-#             'forecast_length': forecast_length
-#         })
+#         # Assuming you've saved the CSV file path in the session
+#         df = pd.read_csv(request.session.get('uploaded_csv_path'))  # Retrieve the path where the CSV is saved
 
-#     return redirect('services')
+#         # Run your forecasting pipeline (adjust with your forecasting function)
+#         result = (df, features, target, periods, frequency)
+
+#         # Return the result as a JSON response
+#         return JsonResponse({'forecast': result})
+    
 
 
 
+from django.views.decorators.csrf import csrf_exempt
+
+# @csrf_exempt
+# def test_forecast_submission(request):
+#     if request.method == 'POST':
+#         return JsonResponse({'message': 'Hello World this my new world'})
+    
+import json
+@csrf_exempt
+def test_forecast_submission(request):
+    if request.method == 'POST':
+        try:
+            features = request.POST.getlist('dropdown1[]')
+            target = request.POST.get('dropdown2')
+            frequency = request.POST.get('time_frame')
+            periods = int(request.POST.get('periods'))
+
+            # Get file path from session
+            file_path = request.session.get('uploaded_csv_path')
+            if not file_path or not os.path.exists(file_path):
+                return JsonResponse({'error': 'CSV file not found in session.'})
+
+            df = pd.read_csv(file_path)
+            preview_data = df.head().to_dict(orient='records')
+
+            response,mape_score = autots_run_pipeline(df, features, target, periods, frequency)
+
+            # Save the forecast result as CSV
+            # output_filename = 'forecasted_data.csv'
+            output_file_name=f"forecasted_{file_path.split('media/uploads/')[1]}"
+            output_path = os.path.join('media/forecasted/', output_file_name)
+            os.makedirs(os.path.dirname(output_path), exist_ok=True)  # Ensure directory exists
+            response.to_csv(output_path, index=False)
+
+            result = {
+                'feature': features,
+                'target': target,
+                'frequency': frequency,
+                'periods': periods,
+                'mape': mape_score,
+                'data_preview_path': file_path,
+            }
+
+            return JsonResponse({'message': 'Hello World', 'data': result})
+        except Exception as e:
+            return JsonResponse({'error': str(e)})
 
 
 def contact(request):
