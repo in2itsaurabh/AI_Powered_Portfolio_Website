@@ -121,6 +121,7 @@ This site serves as a personal portfolio to demonstrate skills in:
 ```bash
 git clone <your-repo-url>
 cd <project-folder>
+make .env file and add your api key of gemini api
 pip install -r requirements.txt
 python manage.py migrate
 python manage.py runserver
