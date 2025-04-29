@@ -1,0 +1,215 @@
+{% extends 'base.html' %}
+{% block title %}RAG Interface - Portfolio{% endblock %}
+
+{% block content %}
+  <h2>RAG (Retriever-Augmented Generation) Interface</h2>
+  <p>Upload a document (PDF,TXT,JSON,CSV,EXCEL) and ask questions about its contents. The system will process the document and provide intelligent responses using RAG technology.</p>
+
+  <!-- Upload PDF Form -->
+  <div class="upload-form" id="upload-section">
+    <h3>Upload Your Document (PDF,TXT,JSON,CSV,EXCEL)</h3>
+    <form method="POST" enctype="multipart/form-data" id="uploadForm">
+      {% csrf_token %}
+      <input type="file" name="file" required />
+      <button type="submit">Upload and Process File</button>
+    </form>
+  </div>
+
+  <!-- Ask a Question Form (Hidden initially) -->
+  <div class="ask-question" id="ask-question-section" style="display: none; margin-top: 30px;">
+    <h3>Ask a Question About the PDF</h3>
+
+    <!-- Display responses below the question input -->
+    <div id="responseArea" style="margin-top: 20px;"></div>
+
+    <!-- Input for asking questions -->
+    <form method="POST" id="questionForm">
+      {% csrf_token %}
+      <input type="text" name="question" placeholder="Ask your question here" required />
+      <button type="submit">Ask</button>
+    </form>
+  </div>
+
+  <!-- JavaScript to handle form submission, showing/hiding sections, and AJAX -->
+  <script>
+    const uploadForm = document.getElementById('uploadForm');
+    const questionForm = document.getElementById('questionForm');
+    const uploadButton = document.querySelector('button[type="submit"]');
+    const askQuestionSection = document.getElementById('ask-question-section');
+    const responseArea = document.getElementById('responseArea');
+
+    // On form submission, show success message and question form after processing
+    uploadForm.addEventListener('submit', function(event) {
+      event.preventDefault();  // Stop normal form submission
+      uploadButton.disabled = true;  // Disable the button to prevent multiple submissions
+      uploadButton.innerText = 'Processing...';  // Change button text to show that it's processing
+
+      const formData = new FormData(uploadForm);
+
+      fetch("{% url 'rag_process_pdf' %}", {
+        method: 'POST',
+        headers: {
+          'X-CSRFToken': '{{ csrf_token }}',
+        },
+        body: formData
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          uploadButton.disabled = false;  // Enable the button again
+          uploadButton.innerText = 'Upload and Process PDF';  // Reset button text
+          // alert('PDF uploaded and processed successfully!');  // Notify success
+          
+          // Show the "Ask a Question" section after the upload
+          askQuestionSection.style.display = 'block';
+        } else {
+          alert('Upload failed. Try again!');
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        alert('Error uploading file.');
+      });
+    });
+
+    // Handle question submission using AJAX
+    questionForm.addEventListener('submit', function(event) {
+      event.preventDefault();  // Prevent default form submission
+
+      const question = questionForm.querySelector('input[type="text"]').value.trim();
+      if (!question) return;
+
+      // Display the user's question in the response area
+      responseArea.innerHTML = `
+        <div class="user-question">
+          <strong>You:</strong> ${question}
+        </div>
+        <div class="loading-message">Processing...</div>
+      `;
+
+      questionForm.querySelector('input[type="text"]').value = '';  // Clear the input field
+
+      // Send question to the backend for answering
+      fetch("{% url 'rag_ask_question' %}", {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'X-CSRFToken': '{{ csrf_token }}',
+        },
+        body: new URLSearchParams({ 'question': question })
+      })
+      .then(response => response.json())
+      .then(data => {
+        // Clear the loading message once the response is received
+        responseArea.querySelector('.loading-message').remove();
+
+        if (data.answer) {
+          // Display the bot's answer in the response area
+          responseArea.innerHTML += `
+            <div class="bot-response">
+              <strong>Bot:</strong> ${data.answer}
+            </div>
+          `;
+        } else {
+          responseArea.innerHTML += `
+            <div class="error-message">Sorry, I couldn't find an answer to that question.</div>
+          `;
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        responseArea.querySelector('.loading-message').remove();  // Remove loading message in case of error
+        responseArea.innerHTML += `
+          <div class="error-message">Error asking question.</div>
+        `;
+      });
+    });
+  </script>
+
+  <!-- Add the CSS styles for the question and response -->
+  <style>
+    /* Styling for the user question and bot response */
+    #responseArea {
+      padding: 15px;
+      {% comment %} background-color: #e4ecf4; {% endcomment %}
+      {% comment %} border: 1px solid #e4ecf4; {% endcomment %}
+      {% comment %} border-radius: 5px; {% endcomment %}
+      max-width: 100%;
+      margin-top: 20px;
+    }
+
+    .user-question {
+      background-color: #cce7ff; /* Light blue for user questions */
+      padding: 10px;
+      border-radius: 5px;
+      margin-bottom: 10px;
+    }
+
+    .bot-response {
+      background-color: #e0f7fa; /* Light blue for bot responses */
+      padding: 10px;
+      border-radius: 5px;
+      margin-bottom: 10px;
+    }
+
+    .error-message {
+      color: red;
+      font-weight: bold;
+    }
+
+    .loading-message {
+      font-style: italic;
+      color: #666;
+    }
+
+    /* Styling for the upload section */
+    .upload-form {
+      margin-bottom: 20px;
+    }
+
+    .upload-form input[type="file"] {
+      padding: 8px;
+      margin-bottom: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    .upload-form button {
+      padding: 10px 20px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .upload-form button:disabled {
+      background-color: #ccc;
+    }
+
+    /* Styling for the question input */
+    #questionForm input[type="text"] {
+      padding: 10px;
+      width: 100%;
+      margin-right: 10px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+
+    #questionForm button {
+      padding: 10px 20px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    /* Hover effects for the buttons */
+    .upload-form button:hover,
+    #questionForm button:hover {
+      background-color: #45a049;
+    }
+  </style>
+
+{% endblock %}
