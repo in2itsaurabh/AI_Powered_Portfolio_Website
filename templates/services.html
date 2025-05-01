@@ -11,12 +11,38 @@
         Developed a flexible forecasting utility that enables users to upload any time series dataset, select their desired features and target variable, and generate accurate forecasts based on selected frequencies like daily, weekly, or monthly.
       </p>
     </div>
+    <div id="upload-form" class="upload-form" style="display: none;">
+      <h3>Upload Your Dataset</h3>
+      <form method="POST" enctype="multipart/form-data" action="{% url 'upload_csv' %}">
+        {% csrf_token %}
+        <input type="file" name="csv_file" accept=".csv" required />
+        <button type="submit">Upload</button>
+      </form>
+    </div>
     <div class="service-card" onclick="window.location.href='{% url 'rag_interface' %}'">
       <h3>Utility for RAG (Retriever-Augmented Generation)</h3>
       <p>
         Upload a document (PDF,TXT,JSON,CSV,EXCEL) and ask questions about its contents. The system will process the document and provide intelligent responses using RAG (Retriever-Augmented Generation) technology.
       </p>
     </div>
+    <div class="service-card" onclick="window.location.href='{% url 'sentiment' %}'">
+      <h3>Sentiment Analysis Tool</h3>
+      <p>
+        Enter a text snippet and get real-time predictions of emotional tone such as happy, sad, neutral, negative, or positive. 
+        The tool also detects spam or ham, powered by a deep learning LSTM model.
+      </p>
+    </div>
+    <div class="service-card" onclick="window.location.href='{% url 'sentiment' %}'">
+    {% comment %} <div class="service-card" onclick="window.location.href='{% url 'webscrape_qa' %}'"> {% endcomment %}
+      <h3>Web Scraping Utility</h3>
+      <p>
+        A lightweight utility that extracts content from webpages. 
+        Once scraped, you can ask questions based on the page content using smart language models.
+        Ideal for quick content analysis and information retrieval from any public URL.
+      </p>
+    </div>
+    
+    
   </div>
 
   <div id="upload-form" class="upload-form" style="display: none;">

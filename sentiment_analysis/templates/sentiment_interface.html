@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block title %}Sentiment Analysis - Portfolio{% endblock %}
+
+{% block content %}
+<h1>Sentiment Analysis App</h1>
+
+<form method="POST" id="sentiment-form">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Analyze</button>
+</form>
+
+{% if sentiment %}
+    <h3>Sentiment: <span style="color:blue">{{ sentiment }}</span></h3>
+    {% if confidence %}
+        <p>Confidence Score: {{ confidence|floatformat:2 }}%</p>
+    {% endif %}
+{% endif %}
+
+<script>
+  document.getElementById("sentiment-form").addEventListener("keypress", function(e) {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();  // Prevent new line
+      this.submit();       // Submit the form
+    }
+  });
+</script>
+{% endblock %}

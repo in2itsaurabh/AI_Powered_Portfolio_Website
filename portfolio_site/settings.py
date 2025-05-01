@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'home',
     'rag_app',
+    'sentiment_analysis',
 ]
 
 MIDDLEWARE = [

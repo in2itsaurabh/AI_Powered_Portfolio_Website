@@ -14,6 +14,9 @@ from django.core.files.storage import FileSystemStorage
 import pandas as pd
 import os
 from .forecasting_function import autots_run_pipeline
+from urllib.parse import urljoin
+
+
 
 @require_POST
 @csrf_protect
@@ -169,12 +172,13 @@ def test_forecast_submission(request):
             }
 
             # return both your data dict and the HTML
-            
-            # Only extract the relative part under MEDIA_ROOT:
-            relative_path = output_path.replace(str(settings.MEDIA_ROOT) + os.sep, '')
+            relative_path = os.path.relpath(output_path, settings.MEDIA_ROOT)
+            forecast_url = urljoin(settings.MEDIA_URL, relative_path.replace(os.sep, '/'))
+            # # Only extract the relative part under MEDIA_ROOT:
+            # relative_path = output_path.replace(str(settings.MEDIA_ROOT) + os.sep, '')
 
-            # Build the public URL
-            forecast_url = settings.MEDIA_URL + relative_path.replace(os.sep, '/')
+            # # Build the public URL
+            # forecast_url = settings.MEDIA_URL + relative_path.replace(os.sep, '/')
 
             return JsonResponse({
                 'message': 'Hello World',

@@ -18,3 +18,4 @@ autots
 unstructured
 python-docx
 faiss-cpu
+tensorflow

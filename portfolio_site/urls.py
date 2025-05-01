@@ -8,6 +8,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('home.urls')),  # Route everything to your app
     path('rag_app/', include('rag_app.urls')),  # Include URLs from rag_app
+    path('sentiment/', include('sentiment_analysis.urls')),
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
