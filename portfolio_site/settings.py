@@ -40,6 +40,8 @@ INSTALLED_APPS = [
     'home',
     'rag_app',
     'sentiment_analysis',
+    'webscrape_qa',
+
 ]
 
 MIDDLEWARE = [

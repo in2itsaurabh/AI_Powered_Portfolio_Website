@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Web Scrape & QA Interface</h2>
+
+<!-- Scrape Form -->
+<form method="POST" action=".">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" name="action" value="scrape">Scrape</button>
+</form>
+
+{% if status %}
+    <p><strong>Status:</strong> {{ status }}</p>
+{% endif %}
+
+<!-- Extracted Data -->
+{% if data_extracted %}
+    <hr>
+    <h3>Extracted Content</h3>
+    <pre style="max-height: 300px; overflow-y: auto; background: #f4f4f4; padding: 10px;">{{ data }}</pre>
+
+    <!-- QA Chat Section -->
+    <hr>
+    <h3>Ask Questions About the Extracted Content</h3>
+    <form method="POST" action=".">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="qa">
+        <input type="text" name="question" placeholder="Enter your question" required style="width: 70%;">
+        <button type="submit">Ask</button>
+    </form>
+
+    {% if question %}
+        <p><strong>Question:</strong> {{ question }}</p>
+    {% endif %}
+    {% if answer %}
+        <p><strong>Answer:</strong> {{ answer }}</p>
+    {% endif %}
+{% endif %}
+{% endblock %}
